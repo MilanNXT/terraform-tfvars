@@ -3,12 +3,30 @@
 management of input values for terraform configuration from different sources with TF templating capability
 
 
-priority hierrchy (from lowest tohighest)
-./TEST/*.tfvars.yml
-./tfvars/*-default.yml
-./tfvars/<environment>/_default.yml
-./tfvars/<environment>/*.yml
-vault_store/default/
-vault_store/TFW/default-TEST/*
-vault_store/<workspace>-TEST/*
-terraform <command> <input parameters> '-var tfenv=<env> -var tfvar={}' (tfvar must be provided in JSON format)
+to test run fllowing commands
+```
+terraform init
+terraform apply -auto-approve -var tfenv="TEST"
+```
+
+
+
+input variable merge priority hierarchy (from highest to lowest)
+
+1. parameter 'tfvar' from command line (terraform plan -var tfenv=TEST -var tfvar={}' (tfvar must be provided in JSON format))
+2. vault_store/<workspace>-TEST/*
+3. vault_store/default-TEST/*
+4. vault_store/default/
+5. ./tfvars/TEST/tfvar-namespace*.yml
+6. ./tfvars/TEST/tfvar-namespace-default.yml
+7. ./tfvars/TEST/_default.yml
+8. ./tfvars/tfvar-namespace-default.yml
+9. ./tfvars/_default.yml
+10. ./TEST/*.tfvars.yml
+
+
+
+
+
+
+
