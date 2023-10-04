@@ -6,14 +6,15 @@ management of input values for terraform configuration from different sources
 - external vault system ( AWS SSM, Azure Key Vault ...)
 - folders located outsides
 
-include  TF templatinx capability
+include  TF templating capability
 
 
-to test run fllowing commands
+to test, clone and run fllowing commands
 ```
 terraform init
 terraform apply -auto-approve -var tfenv="TEST"
 ```
+you can try to update yml files to see how changes reflect.
 
 
 
@@ -29,10 +30,5 @@ input variable merge priority hierarchy (from highest to lowest)
 8. ./tfvars/tfvar-namespace-default.yml
 9. ./tfvars/_default.yml
 10. ./TEST/*.tfvars.yml
-
-
-
-
-
 
 
