@@ -1,2 +1,4 @@
 # terraform-tfvars
-terraform input variable confirguration management
+
+management of input values for terraform configuration from different sources with TF templating capability
+
