@@ -285,9 +285,9 @@ output all {
 ###
 #### DEBUG
 
-output test0 {
-    value = module.folderfiles_yml.merged
-}
+# output test0 {
+#     value = module.folderfiles_yml.merged
+# }
 
 # output test1 {
 #     value = module.folderfiles_yml.merged
