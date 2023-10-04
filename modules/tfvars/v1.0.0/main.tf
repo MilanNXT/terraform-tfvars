@@ -42,7 +42,7 @@ module vault_yml {
     )
 }
 
-# retrieve all TFVARS files from folder
+# retrieve all TFVARS files from envoironment folder
 module tfvars_yml {
     source  = "../../deepmerge/v1.1.15/"
     maps = concat(
@@ -61,9 +61,18 @@ module folderfiles_yml {
             vars = {}
             config = {}
         }],
-        [ yamldecode(fileexists("${local.params.yml_path}/${local.params.tfenv}/_default.yml") ? file("${local.params.yml_path}/${local.params.tfenv}/_default.yml") : "{}") ],
+        # read folder file for global default yml
+        [ yamldecode(fileexists("${local.params.yml_path}/_default.yml") ? file("${local.params.yml_path}/_default.yml") : "{}") ],
+        # read folder file for global namespace default yml
         [ yamldecode(local.params.yml_namespace == "" ? "{}" : (fileexists("${local.params.yml_path}/${local.params.yml_namespace}-default.yml") ? file("${local.params.yml_path}/${local.params.yml_namespace}-default.yml") : "{}")) ],
-        [ for f in fileset("${local.params.yml_path}/${local.params.tfenv}","${local.params.yml_namespace}*.yml"): yamldecode( local.params.yml_namespace == "" ? "{}" : file("${local.params.yml_path}/${local.params.tfenv}/${f}"))  ]
+        # read folder file for environment default yml
+        [ yamldecode(fileexists("${local.params.yml_path}/${local.params.tfenv}/_default.yml") ? file("${local.params.yml_path}/${local.params.tfenv}/_default.yml") : "{}") ],
+        # read folder file for environment namespace default yml
+        [ yamldecode(local.params.yml_namespace == "" ? "{}" : (fileexists("${local.params.yml_path}/${local.params.tfenv}/${local.params.yml_namespace}-default.yml") ? file("${local.params.yml_path}/${local.params.tfenv}/${local.params.yml_namespace}-default.yml") : "{}")) ],
+        # read folder file for all namespace yml
+        [ for f in fileset("${local.params.yml_path}/${local.params.tfenv}","${local.params.yml_namespace}*.yml"): yamldecode( local.params.yml_namespace == "" ? "{}" : file("${local.params.yml_path}/${local.params.tfenv}/${f}")) ],
+        # read folder file for all environment yml when no namespace specified
+        local.params.yml_namespace == "" ? [ for f in fileset("${local.params.yml_path}/${local.params.tfenv}","*.yml"): file("${local.params.yml_path}/${local.params.tfenv}/${f}") ] : [],
     )
 }
 
@@ -177,9 +186,18 @@ module folderfiles_yml_tftpl {
             config = {}
         }],
         [ module.variables.merged ],
+        # read folder file for global default yml
         [ yamldecode(fileexists("${local.params.yml_path}/_default.yml") ? file("${local.params.yml_path}/_default.yml") : "{}") ],
-        [ yamldecode(local.params.yml_namespace == "" ? "{}" : (fileexists("${module.variables.merged.yml_path}/${module.variables.merged.tfenv}/${module.variables.merged.yml_namespace}-default.yml") ? templatefile("${module.variables.merged.yml_path}/${module.variables.merged.tfenv}/${module.variables.merged.yml_namespace}-default.yml",module.variables.merged["vars"]) : "{}")) ],
-        [ for f in fileset("${module.variables.merged.yml_path}/${module.variables.merged.tfenv}","${local.params.yml_namespace}*.yml"): yamldecode(local.params.yml_namespace == "" ? "{}" : templatefile("${module.variables.merged.yml_path}/${module.variables.merged.tfenv}/${f}",module.variables.merged["vars"])) ]
+        # read folder file for global namespace default yml
+        [ yamldecode(local.params.yml_namespace == "" ? "{}" : (fileexists("${local.params.yml_path}/${local.params.yml_namespace}-default.yml") ? file("${local.params.yml_path}/${local.params.yml_namespace}-default.yml") : "{}")) ],
+        # read folder file for environment default yml
+        [ yamldecode(fileexists("${local.params.yml_path}/${local.params.tfenv}/_default.yml") ? file("${local.params.yml_path}/${local.params.tfenv}/_default.yml") : "{}") ],
+        # read folder file for environment namespace default yml
+        [ yamldecode(local.params.yml_namespace == "" ? "{}" : (fileexists("${local.params.yml_path}/${local.params.tfenv}/${local.params.yml_namespace}-default.yml") ? file("${local.params.yml_path}/${local.params.tfenv}/${local.params.yml_namespace}-default.yml") : "{}")) ],
+        # read folder file for all namespace yml
+        [ for f in fileset("${local.params.yml_path}/${local.params.tfenv}","${local.params.yml_namespace}*.yml"): yamldecode( local.params.yml_namespace == "" ? "{}" : file("${local.params.yml_path}/${local.params.tfenv}/${f}")) ],
+        # read folder file for all environment yml when no namespace specified
+        local.params.yml_namespace == "" ? [ for f in fileset("${local.params.yml_path}/${local.params.tfenv}","*.yml"): file("${local.params.yml_path}/${local.params.tfenv}/${f}") ] : [],
     )
 }
 
@@ -267,9 +285,9 @@ output all {
 ###
 #### DEBUG
 
-# output test0 {
-#     value = module.tfvars.merged
-# }
+output test0 {
+    value = module.folderfiles_yml.merged
+}
 
 # output test1 {
 #     value = module.folderfiles_yml.merged

@@ -9,6 +9,7 @@ module tfvars {
         tfvar = var.tfvar
         tfbranch = var.tfbranch
         workspace = terraform.workspace
+        yml_path="${path.root}/tfvars"
         yml_namespace = "tfvar-namespace"
     }
 }
