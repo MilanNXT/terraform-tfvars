@@ -134,8 +134,8 @@ module macros {
                         environment = lookup(ev,"environment","DEV")
                         name        = lookup(sv.task,"host",lookup(cv,"name",ck))  # for hostname creation check task hostname of not exists use name of the container, otherwise use map key
                         branch_name = lookup(module.tfvars.merged["vars"],"branch_name","master")
-                        host_url    = lookup(sv.task,"host_url",lookup(sv,"host_url",lookup(ev,"host_url",lookup(sv.task,"host","")==""?"":"${sv.task.host}.${lookup(sv.task,"base_url",lookup(sv,"base_url",lookup(ev,"base_url","internal.finmason.com")))}")))
-                        base_url    = lookup(sv.task,"base_url",lookup(sv,"base_url",lookup(ev,"base_url","internal.finmason.com")))
+                        host_url    = lookup(sv.task,"host_url",lookup(sv,"host_url",lookup(ev,"host_url",lookup(sv.task,"host","")==""?"":"${sv.task.host}.${lookup(sv.task,"base_url",lookup(sv,"base_url",lookup(ev,"base_url","internal.contoso.com")))}")))
+                        base_url    = lookup(sv.task,"base_url",lookup(sv,"base_url",lookup(ev,"base_url","internal.contoso.com")))
                         # version     = "0.0.0"
                         version     = (
                             lookup( # return 'version number' specified for particular 'container key'

@@ -1,6 +1,12 @@
 # terraform-tfvars
 
-management of input values for terraform configuration from different sources with TF templating capability
+management of input values for terraform configuration from different sources
+
+- terraform variable provided on cmdline
+- external vault system ( AWS SSM, Azure Key Vault ...)
+- folders located outsides
+
+include  TF templatinx capability
 
 
 to test run fllowing commands
